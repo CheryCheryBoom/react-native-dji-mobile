@@ -33,6 +33,9 @@ class DJIMobile: NSObject, RCTInvalidating {
     case AircraftHomeLocation
     case AircraftUltrasonicHeight
     case CompassHasError
+    
+    case YawRelativeToAircraftHeading
+    case GimbalAttitude
 
     case CameraIsRecording
     case SDCardIsInserted
@@ -56,6 +59,9 @@ class DJIMobile: NSObject, RCTInvalidating {
     .AircraftHomeLocation: [DJIFlightControllerParamHomeLocation, DJIFlightControllerKey.self],
     .AircraftUltrasonicHeight: [DJIFlightControllerParamUltrasonicHeightInMeters, DJIFlightControllerKey.self],
     .CompassHasError: [DJIFlightControllerParamCompassHasError, DJIFlightControllerKey.self],
+    .YawRelativeToAircraftHeading: [DJIGimbalParamAttitudeYawRelativeToAircraft,
+                                    DJIGimbalKey.self],
+    .GimbalAttitude: [DJIGimbalParamAttitudeInDegrees, DJIGimbalKey.self],
     .CameraIsRecording: [DJICameraParamIsRecording, DJICameraKey.self],
     .SDCardIsInserted: [DJICameraParamSDCardIsInserted, DJICameraKey.self],
     .SDCardIsReadOnly: [DJICameraParamSDCardIsReadOnly, DJICameraKey.self],
@@ -158,6 +164,12 @@ class DJIMobile: NSObject, RCTInvalidating {
 
     case .CompassHasError:
       startCompassHasErrorListener()
+        
+    case .YawRelativeToAircraftHeading:
+        startYawRelativeHeadingListener()
+        
+    case .GimbalAttitude:
+        startGimbalAttitudeListener()
 
     case .CameraIsRecording:
       startCameraIsRecordingListener()
@@ -299,6 +311,28 @@ class DJIMobile: NSObject, RCTInvalidating {
       }
     }
   }
+    
+  func startYawRelativeHeadingListener() {
+     let event = SdkEventName.YawRelativeToAircraftHeading
+     startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
+        if let yawHeading = newValue?.doubleValue {
+            EventSender.sendReactEvent(type: event.rawValue, value: yawHeading)
+        }
+     }
+  }
+    
+    func startGimbalAttitudeListener(){
+     let event = SdkEventName.GimbalAttitude
+     startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
+        if let gimbalAttitude = newValue?.value as? DJIGimbalAttitude {
+            EventSender.sendReactEvent(type: event.rawValue, value: [
+                "pitch": gimbalAttitude.pitch,
+                "roll": gimbalAttitude.roll,
+                "yaw": gimbalAttitude.yaw
+            ])
+        }
+     }
+    }
 
   func startCameraIsRecordingListener() {
     let event = SdkEventName.CameraIsRecording

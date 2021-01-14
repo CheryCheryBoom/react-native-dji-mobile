@@ -126,6 +126,12 @@ const DJIMobileWrapper = {
   startUltrasonicHeightListener: startListener(DJIMobile.AircraftUltrasonicHeight),
   stopUltrasonicHeightListener: stopListener(DJIMobile.AircraftUltrasonicHeight),
 
+  startYawRelativeHeadingListener: startListener(DJIMobile.YawRelativeToAircraftHeading),
+  stopYawRelativeHeadingListener: stopListener(DJIMobile.YawRelativeToAircraftHeading),
+
+  startGimbalAttitudeListener: startListener(DJIMobile.GimbalAttitude),
+  stopGimbalAttitudeListener: stopListener(DJIMobile.GimbalAttitude),
+
   startCompassHasErrorListener: startListener(DJIMobile.CompassHasError),
   stopCompassHasErrorListener: stopListener(DJIMobile.CompassHasError),
 
