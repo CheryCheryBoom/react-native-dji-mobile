@@ -325,6 +325,7 @@ class DJIMobile: NSObject, RCTInvalidating {
      let event = SdkEventName.GimbalAttitude
      startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
         if let gimbalAttitude = newValue?.value as? DJIGimbalAttitude {
+            print("Gimbal212338:", gimbalAttitude, separator: " ")
             EventSender.sendReactEvent(type: event.rawValue, value: [
                 "pitch": gimbalAttitude.pitch,
                 "roll": gimbalAttitude.roll,
