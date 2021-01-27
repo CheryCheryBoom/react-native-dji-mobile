@@ -207,9 +207,10 @@ class DJIMobile: NSObject, RCTInvalidating {
   }
 
   func startAircraftCompassHeadingListener() {
-    startKeyListener(.AircraftCompassHeading) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
+    let event = SdkEventName.AircraftCompassHeading
+    startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
       if let heading = newValue?.doubleValue {
-        EventSender.sendReactEvent(type: SdkEventName.AircraftCompassHeading.rawValue, value: heading)
+        EventSender.sendReactEvent(type: event.rawValue, value: heading)
       }
     }
   }
@@ -326,7 +327,7 @@ class DJIMobile: NSObject, RCTInvalidating {
      var gimbalAttitude = DJIGimbalAttitude(pitch: 0, roll: 0, yaw: 0)
      startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
         if let structValue = newValue?.value as? NSValue {
-            structValue?.getValue(&gimbalAttitude)
+            structValue.getValue(&gimbalAttitude)
             EventSender.sendReactEvent(type: event.rawValue, value: [
                 "pitch": gimbalAttitude.pitch,
                 "roll": gimbalAttitude.roll,
