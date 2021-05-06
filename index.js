@@ -132,6 +132,12 @@ const DJIMobileWrapper = {
   startGimbalAttitudeListener: startListener(DJIMobile.GimbalAttitude),
   stopGimbalAttitudeListener: stopListener(DJIMobile.GimbalAttitude),
 
+  startOpticalZoomListener: startListener(DJIMobile.ZoomOptical),
+  stopOpticalZoomListener: stopListener(DJIMobile.ZoomOptical),
+
+  startDigitalZoomFactorListener: startListener(DJIMobile.ZoomFactorDigital),
+  stopDigitalZoomFactorListener: stopListener(DJIMobile.ZoomFactorDigital),
+
   startCompassHasErrorListener: startListener(DJIMobile.CompassHasError),
   stopCompassHasErrorListener: stopListener(DJIMobile.CompassHasError),
 

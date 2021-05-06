@@ -37,6 +37,9 @@ class DJIMobile: NSObject, RCTInvalidating {
     case YawRelativeToAircraftHeading
     case GimbalAttitude
 
+    case ZoomOptical
+    case ZoomFactorDigital
+
     case CameraIsRecording
     case SDCardIsInserted
     case SDCardIsReadOnly
@@ -62,6 +65,8 @@ class DJIMobile: NSObject, RCTInvalidating {
     .YawRelativeToAircraftHeading: [DJIGimbalParamAttitudeYawRelativeToAircraft,
                                     DJIGimbalKey.self],
     .GimbalAttitude: [DJIGimbalParamAttitudeInDegrees, DJIGimbalKey.self],
+    .ZoomOptical: [DJICameraParamOpticalZoomFocalLength, DJICameraKey.self],
+    .ZoomFactorDigital: [DJICameraParamDigitalZoomFactor, DJICameraKey.self],
     .CameraIsRecording: [DJICameraParamIsRecording, DJICameraKey.self],
     .SDCardIsInserted: [DJICameraParamSDCardIsInserted, DJICameraKey.self],
     .SDCardIsReadOnly: [DJICameraParamSDCardIsReadOnly, DJICameraKey.self],
@@ -139,7 +144,7 @@ class DJIMobile: NSObject, RCTInvalidating {
       startBatteryPercentChargeRemainingListener()
 
     case .AircraftCompassHeading:
-      startAircraftCompassHeadingListener()
+        startAircraftCompassHeadingListener()
 
     case .AircraftLocation:
       startAircraftLocationListener()
@@ -164,12 +169,18 @@ class DJIMobile: NSObject, RCTInvalidating {
 
     case .CompassHasError:
       startCompassHasErrorListener()
-        
+
     case .YawRelativeToAircraftHeading:
         startYawRelativeHeadingListener()
-        
+
     case .GimbalAttitude:
         startGimbalAttitudeListener()
+
+    case .ZoomOptical:
+        startOpticalZoomListener()
+
+    case .ZoomFactorDigital:
+        startDigitalZoomListener()
 
     case .CameraIsRecording:
       startCameraIsRecordingListener()
@@ -206,14 +217,14 @@ class DJIMobile: NSObject, RCTInvalidating {
     }
   }
 
-  func startAircraftCompassHeadingListener() {
-    let event = SdkEventName.AircraftCompassHeading
-    startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
-      if let heading = newValue?.doubleValue {
-        EventSender.sendReactEvent(type: event.rawValue, value: heading)
+    func startAircraftCompassHeadingListener() {
+      let event = SdkEventName.AircraftCompassHeading
+      startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
+        if let heading = newValue?.doubleValue {
+          EventSender.sendReactEvent(type: event.rawValue, value: heading)
+        }
       }
     }
-  }
 
   func startAircraftLocationListener() {
     let event = SdkEventName.AircraftLocation
@@ -312,7 +323,7 @@ class DJIMobile: NSObject, RCTInvalidating {
       }
     }
   }
-    
+
   func startYawRelativeHeadingListener() {
      let event = SdkEventName.YawRelativeToAircraftHeading
      startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
@@ -321,8 +332,8 @@ class DJIMobile: NSObject, RCTInvalidating {
         }
      }
   }
-    
-    func startGimbalAttitudeListener(){
+
+    func startGimbalAttitudeListener() {
      let event = SdkEventName.GimbalAttitude
      var gimbalAttitude = DJIGimbalAttitude(pitch: 0, roll: 0, yaw: 0)
      startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
@@ -335,6 +346,24 @@ class DJIMobile: NSObject, RCTInvalidating {
             ])
         }
      }
+    }
+
+    func startOpticalZoomListener() {
+     let event = SdkEventName.ZoomOptical
+     startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
+        if let opticalZoom = newValue?.unsignedIntegerValue {
+            EventSender.sendReactEvent(type: event.rawValue, value: opticalZoom)
+          }
+        }
+    }
+
+    func startDigitalZoomListener() {
+     let event = SdkEventName.ZoomFactorDigital
+     startKeyListener(event) { (oldValue: DJIKeyedValue?, newValue: DJIKeyedValue?) in
+        if let digitalZoomFactor = newValue?.floatValue {
+            EventSender.sendReactEvent(type: event.rawValue, value: digitalZoomFactor)
+          }
+        }
     }
 
   func startCameraIsRecordingListener() {
